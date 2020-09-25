@@ -168,7 +168,8 @@ class TestRunner {
                                 script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
                                 script.sh(script: "mkdir -p ${base_source}")
                                 script.sh(script: "ls ${base_source}")
-                                script.dir(base_source) { // Trick to create the parent
+                                script.sh(script: "cd ${base_source}")
+                                
                                     def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
 
                                     script.sh(script: "touch ${pyver}.txt")
@@ -180,7 +181,7 @@ class TestRunner {
                                     } else {
                                         script.sh(script: cmd)
                                     }
-                                }
+                                
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
