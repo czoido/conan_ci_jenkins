@@ -74,21 +74,9 @@ class TestRunner {
             // First (revisions or not) for linux
             Map<String, Closure> builders = [:]
             List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
-            for (def pyver in pyVers) {
-                String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
-                builders[stageLabel] = getTestClosure(testModule, "Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
-            }
-            script.parallel(builders)
-
-            // Seconds (revisions or not) for Mac and windows
-            builders = [:]
-            for (def slaveLabel in ["Macos", "Windows"]) {
-                pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
-                for (def pyver in pyVers) {
-                    String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
-                    builders[stageLabel] = getTestClosure(testModule, slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
-                }
-            }
+            def pyver = "py37"
+            String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
+            builders[stageLabel] = getTestClosure(testModule, "Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
             script.parallel(builders)
         }
         if(testLevelConfig.shouldPublishTestPypi()){
