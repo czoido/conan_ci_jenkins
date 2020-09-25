@@ -168,6 +168,7 @@ class TestRunner {
                                 script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
                                 script.sh(script: 'ls ${escaped_ws}')
                                 script.sh(script: 'ls ${sourcedir}')
+                                script.sh(script: 'touch ${pyver}.txt')
                                 script.dir(base_source) { // Trick to create the parent
                                     def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
                                     String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
