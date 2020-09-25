@@ -141,6 +141,19 @@ class TestRunner {
                     if (slaveLabel == "Linux"){
                         try {
                             script.sh("docker pull conanio/conantestagent")
+                            Map<String, String> vars = script.checkout(script.scm)
+
+                            def commit = vars["GIT_COMMIT"].substring(0, 4)
+                            script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
+                            String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
+
+                            workdir = "${base_dir}${commit}/${pyver}/${flavor}"
+                            base_source = "${base_dir}source/${commit}"
+                            sourcedir = "${base_source}/${pyver}/${flavor}"
+                            while (script.fileExists(sourcedir)) {
+                                sourcedir = sourcedir + "_"
+                            }
+
                             script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir}") {
 
                                 try {
@@ -150,18 +163,6 @@ class TestRunner {
                                     script.echo "Cannot clean WS"
                                 }
 
-                                Map<String, String> vars = script.checkout(script.scm)
-
-                                def commit = vars["GIT_COMMIT"].substring(0, 4)
-                                script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
-                                String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
-
-                                workdir = "${base_dir}${commit}/${pyver}/${flavor}"
-                                base_source = "${base_dir}source/${commit}"
-                                sourcedir = "${base_source}/${pyver}/${flavor}"
-                                while (script.fileExists(sourcedir)) {
-                                    sourcedir = sourcedir + "_"
-                                }
 
                                 // Write the files we are going to use. // TODO: Can I copy the folder?
                                 script.writeFile file: "${script.WORKSPACE}/python_runner/runner.py", text: script.libraryResource('org/jfrog/conanci/python_runner/runner.py')
