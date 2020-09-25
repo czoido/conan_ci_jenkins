@@ -156,41 +156,40 @@ class TestRunner {
                             script.sh("docker pull conanio/conantests")
                             script.docker.image('conanio/conantests').inside("-e CONAN_USER_HOME=${sourcedir}") {
 
-                                script.lock('source_code') { // Prepare a clean new directory with the sources
-                                    try {
-                                        script.step([$class: 'WsCleanup'])
-                                    }
-                                    catch (ignore) {
-                                        script.echo "Cannot clean WS"
-                                    }
+                                try {
+                                    script.step([$class: 'WsCleanup'])
+                                }
+                                catch (ignore) {
+                                    script.echo "Cannot clean WS"
+                                }
 
-                                    Map<String, String> vars = script.checkout(script.scm)
+                                Map<String, String> vars = script.checkout(script.scm)
 
-                                    def commit = vars["GIT_COMMIT"].substring(0, 4)
-                                    script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
-                                    String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
+                                def commit = vars["GIT_COMMIT"].substring(0, 4)
+                                script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
+                                String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
 
-                                    workdir = "${base_dir}${commit}/${pyver}/${flavor}"
-                                    base_source = "${base_dir}source/${commit}"
-                                    sourcedir = "${base_source}/${pyver}/${flavor}"
-                                    while (script.fileExists(sourcedir)) {
-                                        sourcedir = sourcedir + "_"
-                                    }
+                                workdir = "${base_dir}${commit}/${pyver}/${flavor}"
+                                base_source = "${base_dir}source/${commit}"
+                                sourcedir = "${base_source}/${pyver}/${flavor}"
+                                while (script.fileExists(sourcedir)) {
+                                    sourcedir = sourcedir + "_"
+                                }
 
-                                    // Write the files we are going to use. // TODO: Can I copy the folder?
-                                    script.writeFile file: "${script.WORKSPACE}/python_runner/runner.py", text: script.libraryResource('org/jfrog/conanci/python_runner/runner.py')
-                                    script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
+                                // Write the files we are going to use. // TODO: Can I copy the folder?
+                                script.writeFile file: "${script.WORKSPACE}/python_runner/runner.py", text: script.libraryResource('org/jfrog/conanci/python_runner/runner.py')
+                                script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
 
-                                    script.dir(base_source) { // Trick to create the parent
-                                        def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
-                                        String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
-                                        if (slaveLabel == "Windows") {
-                                            script.bat(script: cmd)
-                                        } else {
-                                            script.sh(script: cmd)
-                                        }
+                                script.dir(base_source) { // Trick to create the parent
+                                    def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
+                                    String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
+                                    if (slaveLabel == "Windows") {
+                                        script.bat(script: cmd)
+                                    } else {
+                                        script.sh(script: cmd)
                                     }
                                 }
+
 
 
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}")
