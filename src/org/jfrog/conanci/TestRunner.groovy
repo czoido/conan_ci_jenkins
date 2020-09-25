@@ -166,7 +166,8 @@ class TestRunner {
                                 // Write the files we are going to use. // TODO: Can I copy the folder?
                                 script.writeFile file: "${script.WORKSPACE}/python_runner/runner.py", text: script.libraryResource('org/jfrog/conanci/python_runner/runner.py')
                                 script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
-
+                                script.sh(script: 'ls ${escaped_ws}')
+                                script.sh(script: 'ls ${sourcedir}')
                                 script.dir(base_source) { // Trick to create the parent
                                     def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
                                     String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
@@ -176,6 +177,7 @@ class TestRunner {
                                         script.sh(script: cmd)
                                     }
                                 }
+                                script.sh(script: 'ls ${sourcedir}')
 
 
 
