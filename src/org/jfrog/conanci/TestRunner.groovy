@@ -169,12 +169,8 @@ class TestRunner {
                                 script.dir(base_source) { // Trick to create the parent
                                     def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
 
-                                    script.sh(script: "ls ${escaped_ws}")
-                                    script.sh(script: "ls ${sourcedir}")
                                     script.sh(script: "touch ${pyver}.txt")
-                                    script.sh(script: "ls ${escaped_ws}")
-                                    script.sh(script: "ls ${sourcedir}")
-
+                                    script.sh(script: "ls")
 
                                     String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
                                     if (slaveLabel == "Windows") {
@@ -183,10 +179,6 @@ class TestRunner {
                                         script.sh(script: cmd)
                                     }
                                 }
-                                script.sh(script: 'ls ${sourcedir}')
-
-
-
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
