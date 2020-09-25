@@ -118,13 +118,12 @@ class TestRunner {
         excludedTags.add("local_bottle")
         for(revisionsEnabled in [true, false]) {
             Map<String, Closure> builders = [:]
-            for (slaveLabel in ["Linux", "Macos", "Windows"]) {
+            for (slaveLabel in ["Linux"]) {
                 def pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
-                for (def pyver in pyVers) {
-                    String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
-                    builders[stageLabel] = getTestClosure(testModule, slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
-                }
-            }
+                def pyver = "py37"
+                String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
+                builders[stageLabel] = getTestClosure(testModule, slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
+        }
             script.parallel(builders)
         }
     }
