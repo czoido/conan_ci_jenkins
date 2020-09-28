@@ -226,7 +226,7 @@ class TestRunner {
                             script.sh("touch ${sourcedir}/testfile.txt")
                             script.sh("ls ${sourcedir}")
                             script.sh("docker pull conanio/conantestagent")
-                            script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v /tmp:/tmp") {
+                            script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir}") {
                                 script.sh(script: "mkdir -p ${sourcedir}")
                                 script.sh(script: "cp -R ${escaped_ws}/* ${sourcedir}")
                                 script.sh(script: "pwd")
