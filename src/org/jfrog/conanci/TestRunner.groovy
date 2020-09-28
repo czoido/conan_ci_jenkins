@@ -176,6 +176,7 @@ class TestRunner {
                         script.writeFile file: "${script.WORKSPACE}/python_runner/conf.py", text: script.libraryResource('org/jfrog/conanci/python_runner/conf.py')
 
                         script.dir(base_source) { // Trick to create the parent
+                            script.sh("ls /tmp")
                             def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
                             script.echo "${escaped_ws}"
 
@@ -185,6 +186,7 @@ class TestRunner {
                             } else {
                                 script.sh(script: cmd)
                             }
+                            script.sh(script: "ls ${escaped_ws}")
                         }
                     }
 
@@ -214,7 +216,7 @@ class TestRunner {
                     }
                     else if (slaveLabel == "Linux"){
                         try {
-                            script.sh("touch /tmp/testfile.txt")
+                            script.sh("touch ${sourcedir}/testfile.txt")
                             script.sh("docker pull conanio/conantestagent")
                             script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
                                 script.sh("ls /tmp")
