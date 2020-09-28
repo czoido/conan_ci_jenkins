@@ -187,6 +187,7 @@ class TestRunner {
                             if (slaveLabel == "Windows") {
                                 script.bat(script: cmd)
                             } else {
+                                script.sh(script: "mkdir -p ${sourcedir}")
                                 script.sh(script: "cp -R ${escaped_ws} ${sourcedir}")
                             }
                             script.sh(script: "ls ${escaped_ws}")
