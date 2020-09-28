@@ -210,8 +210,8 @@ class TestRunner {
                     }
                     else if (slaveLabel == "Linux"){
                         try {
-                            script.sh("docker pull conanio/conantests")
-                            script.docker.image('conanio/conantests').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
+                            script.sh("docker pull conanio/conantestagent")
+                            script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
