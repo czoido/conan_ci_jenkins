@@ -228,7 +228,7 @@ class TestRunner {
                             script.sh("docker pull conanio/conantestagent")
                             script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir}") {
                                 script.sh(script: "mkdir -p ${sourcedir}")
-                                script.sh(script: "cp -R ${escaped_ws}/* ${sourcedir}")
+                                script.sh(script: "cp -R * ${sourcedir}")
                                 script.sh(script: "pwd")
                                 script.sh(script: "apt-get update && apt-get install tree")
                                 script.sh(script: "tree .")
