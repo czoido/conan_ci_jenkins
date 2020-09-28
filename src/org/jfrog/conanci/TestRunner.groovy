@@ -219,13 +219,13 @@ class TestRunner {
                     }
                     else if (slaveLabel == "Linux"){
                         try {
-                            script.sh(script: "apt-get update && apt-get install tree")
                             script.sh(script: "tree .")
                             script.sh(script: "tree /tmp")
                             script.sh("touch ${sourcedir}/testfile.txt")
                             script.sh("ls ${sourcedir}")
                             script.sh("docker pull conanio/conantestagent")
                             script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
+                                script.sh(script: "apt-get update && apt-get install tree")
                                 script.sh(script: "tree .")
                                 script.sh(script: "tree /tmp")
                                 script.sh("ls /tmp")
