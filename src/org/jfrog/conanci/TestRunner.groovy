@@ -219,6 +219,7 @@ class TestRunner {
                     }
                     else if (slaveLabel == "Linux"){
                         try {
+                            script.sh(script: "apt-get update && apt-get install tree")
                             script.sh(script: "tree .")
                             script.sh(script: "tree /tmp")
                             script.sh("touch ${sourcedir}/testfile.txt")
