@@ -225,7 +225,7 @@ class TestRunner {
                             script.sh("touch ${sourcedir}/testfile.txt")
                             script.sh("ls ${sourcedir}")
                             script.sh("docker pull conanio/conantestagent")
-                            script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
+                            script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v /tmp:/tmp") {
                                 script.sh(script: "pwd")
                                 script.sh(script: "apt-get update && apt-get install tree")
                                 script.sh(script: "tree .")
