@@ -158,6 +158,8 @@ class TestRunner {
 
                         Map<String, String> vars = script.checkout(script.scm)
                         script.sh(script: "ls")
+                        script.sh(script: "ls ${script.WORKSPACE}")
+                        script.echo "${script.WORKSPACE}"
                         def commit = vars["GIT_COMMIT"].substring(0, 4)
                         script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
                         String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
@@ -175,6 +177,8 @@ class TestRunner {
 
                         script.dir(base_source) { // Trick to create the parent
                             def escaped_ws = "${script.WORKSPACE}".toString().replace("\\", "/")
+                            script.echo "${escaped_ws}"
+
                             String cmd = "python -c \"import shutil; shutil.copytree('${escaped_ws}', '${sourcedir}')\"".toString()
                             if (slaveLabel == "Windows") {
                                 script.bat(script: cmd)
