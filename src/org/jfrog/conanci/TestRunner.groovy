@@ -217,6 +217,7 @@ class TestRunner {
                     else if (slaveLabel == "Linux"){
                         try {
                             script.sh("touch ${sourcedir}/testfile.txt")
+                            script.sh("ls ${sourcedir}")
                             script.sh("docker pull conanio/conantestagent")
                             script.docker.image('conanio/conantestagent').inside("-e CONAN_USER_HOME=${sourcedir} -v${sourcedir}:${sourcedir}") {
                                 script.sh("ls /tmp")
