@@ -157,7 +157,7 @@ class TestRunner {
                         }
 
                         Map<String, String> vars = script.checkout(script.scm)
-
+                        script.sh(script: "ls")
                         def commit = vars["GIT_COMMIT"].substring(0, 4)
                         script.echo "Starting ${script.env.JOB_NAME} with branch ${script.env.BRANCH_NAME}"
                         String base_dir = (slaveLabel == "Windows") ? winTmpBase : restTmpBase
