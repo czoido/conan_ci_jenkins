@@ -62,7 +62,7 @@ class TestRunner {
                 parallelRestBuilders[stageLabel] = getTestClosure(testModule, slaveLabel, stageLabel, false, pyver, excludedTags, includedTags)
             }
         }
-        script.parallel(linuxRestBuilders)
+        script.parallel(parallelRestBuilders)
     }
 
 
