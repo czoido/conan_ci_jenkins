@@ -86,7 +86,8 @@ def run(command):
     # ret = subprocess.call("bash -c '%s'" % command, shell=True)
     shell = '/bin/bash' if platform.system() != "Windows" else None
     ret = subprocess.call(command, shell=True, executable=shell)
-    if ret != 0:
+    # pytest return 5 if no tests are collected
+    if ret != 0 or ret != 5:
         raise Exception("Error running: '%s'" % command)
 
 
