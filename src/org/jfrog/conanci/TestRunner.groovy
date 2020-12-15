@@ -209,7 +209,7 @@ class TestRunner {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
                                 def command = "python python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}"
-                                checkPytestResults(script.bat(script: command, returnStatus: true), command)
+                                checkPytestResults(script.sh(script: command, returnStatus: true), command)
                             }
                         }
                         finally {
@@ -225,7 +225,7 @@ class TestRunner {
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
                                 def command = "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\""
-                                checkPytestResults(script.bat(script: command, returnStatus: true), command)
+                                checkPytestResults(script.sh(script: command, returnStatus: true), command)
                             }
                         }
                         finally {
