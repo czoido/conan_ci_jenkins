@@ -50,12 +50,12 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "python setup.py install && " \
               "conan --version && conan --help && " \
               "pytest {module_path} {tags_str} ".format(**{"module_path": module_path,
-                                                                     "pyenv": pyenv,
-                                                                     "tags_str": tags_str,
-                                                                     "venv_dest": venv_dest,
-                                                                     "venv_exe": venv_exe,
-                                                                     "source_cmd": source_cmd,
-                                                                     "pip_installs": pip_installs})
+                                                           "pyenv": pyenv,
+                                                           "tags_str": tags_str,
+                                                           "venv_dest": venv_dest,
+                                                           "venv_exe": venv_exe,
+                                                           "source_cmd": source_cmd,
+                                                           "pip_installs": pip_installs})
 
     env = get_environ(tmp_folder)
     env["PYTHONPATH"] = source_folder
