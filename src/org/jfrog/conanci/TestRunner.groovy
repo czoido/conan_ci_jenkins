@@ -130,11 +130,6 @@ class TestRunner {
         }
     }
 
-    void checkPytestResults(returnCode, command) {
-        if (returnCode!=0 || returnCode!=5) {
-            throw new Exception("Error running Conan command: ${command}")
-        }
-    }
 
     private Closure getTestClosure(String slaveLabel, String stageLabel, boolean revisionsEnabled, String pyver,
                                    List<String> excludedTags, List<String> includedTags){
@@ -197,8 +192,7 @@ class TestRunner {
                         try {
 
                             script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
-                                def command = "python python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}"
-                                checkPytestResults(script.bat(script: command, returnStatus: true), command)
+                                script.bat(script: "python python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
                         finally {
@@ -208,8 +202,7 @@ class TestRunner {
                     } else if (slaveLabel == "Macos") {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
-                                def command = "python python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}"
-                                checkPytestResults(script.sh(script: command, returnStatus: true), command)
+                                script.sh(script: "python python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
                         finally {
@@ -224,8 +217,7 @@ class TestRunner {
                                 script.sh(script: "mkdir -p ${sourcedir}")
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
-                                def command = "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\""
-                                checkPytestResults(script.sh(script: command, returnStatus: true), command)
+                                script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
                             }
                         }
                         finally {
