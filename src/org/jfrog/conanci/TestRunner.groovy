@@ -53,13 +53,20 @@ class TestRunner {
         return revisionsEnabled ? " --flavor enabled_revisions" : ""
     }
 
+    private static Boolean shouldNodeRun(String name) {
+        if (!this.nodeName || this.nodeName==name) {
+            return true
+        }
+        return false
+    }
+
     void runRESTTests(){
         List<String> excludedTags = []
         List<String> includedTags = ["rest_api", "local_bottle"]
         def slaveLabels = ["Windows", "Linux"]
         Map<String, Closure> parallelRestBuilders = [:]
         for (def slaveLabel in slaveLabels) {
-            if (this.nodeName==slaveLabel) {
+            if (shouldNodeRun(slaveLabel)) {
                 List<String> pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                 for (def pyver in pyVers) {
                     String stageLabel = "${slaveLabel} Https server tests - ${pyver}"
@@ -79,7 +86,7 @@ class TestRunner {
             // First (revisions or not) for linux
             Map<String, Closure> builders = [:]
             List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
-            if (this.nodeName=="Linux") {
+            if (shouldNodeRun("Linux")) {
                 for (def pyver in pyVers) {
                     String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
                     builders[stageLabel] = getTestClosure("Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
@@ -90,7 +97,7 @@ class TestRunner {
             // Seconds (revisions or not) for Mac and windows
             builders = [:]
             for (def slaveLabel in ["Macos", "Windows"]) {
-                if (this.nodeName==slaveLabel) {
+                if (shouldNodeRun(slaveLabel)) {
                     pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                     for (def pyver in pyVers) {
                         String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
@@ -128,7 +135,7 @@ class TestRunner {
         for(revisionsEnabled in [true, false]) {
             Map<String, Closure> builders = [:]
             for (slaveLabel in ["Linux", "Macos", "Windows"]) {
-                if (this.nodeName==slaveLabel) {
+                if (shouldNodeRun(slaveLabel)) {
                     def pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                     for (def pyver in pyVers) {
                         String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
