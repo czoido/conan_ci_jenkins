@@ -53,7 +53,7 @@ class TestRunner {
         return revisionsEnabled ? " --flavor enabled_revisions" : ""
     }
 
-    private static Boolean shouldNodeRun(String name) {
+    private Boolean shouldNodeRun(String name) {
         if (!this.nodeName || this.nodeName==name) {
             return true
         }
