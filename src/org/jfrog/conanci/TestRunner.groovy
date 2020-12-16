@@ -4,7 +4,7 @@ class TestRunner {
 
     private static final String winTmpBase = "D:/J/t/"
     private static final String restTmpBase = "/tmp/"
-    private static final String numCores = "3"
+    private static final String numCores = "4"
     private script;
     private TestLevelConfig testLevelConfig
     private String testModule
