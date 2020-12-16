@@ -8,11 +8,13 @@ class TestRunner {
     private script;
     private TestLevelConfig testLevelConfig
     private String testModule
+    private String nodeName
 
-    TestRunner(script, testModule){
+    TestRunner(script, testModule, nodeName){
         testLevelConfig = new TestLevelConfig(script)
         this.script = script
         this.testModule = testModule
+        this.nodeName = nodeName
     }
 
 
@@ -57,10 +59,12 @@ class TestRunner {
         def slaveLabels = ["Windows", "Linux"]
         Map<String, Closure> parallelRestBuilders = [:]
         for (def slaveLabel in slaveLabels) {
-            List<String> pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
-            for (def pyver in pyVers) {
-                String stageLabel = "${slaveLabel} Https server tests - ${pyver}"
-                parallelRestBuilders[stageLabel] = getTestClosure(slaveLabel, stageLabel, false, pyver, excludedTags, includedTags)
+            if (this.nodeName==slaveLabel) {
+                List<String> pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
+                for (def pyver in pyVers) {
+                    String stageLabel = "${slaveLabel} Https server tests - ${pyver}"
+                    parallelRestBuilders[stageLabel] = getTestClosure(slaveLabel, stageLabel, false, pyver, excludedTags, includedTags)
+                }
             }
         }
         script.parallel(parallelRestBuilders)
@@ -75,19 +79,23 @@ class TestRunner {
             // First (revisions or not) for linux
             Map<String, Closure> builders = [:]
             List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
-            for (def pyver in pyVers) {
-                String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
-                builders[stageLabel] = getTestClosure("Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
+            if (this.nodeName=="Linux") {
+                for (def pyver in pyVers) {
+                    String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
+                    builders[stageLabel] = getTestClosure("Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
+                }
+                script.parallel(builders)
             }
-            script.parallel(builders)
 
             // Seconds (revisions or not) for Mac and windows
             builders = [:]
             for (def slaveLabel in ["Macos", "Windows"]) {
-                pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
-                for (def pyver in pyVers) {
-                    String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
-                    builders[stageLabel] = getTestClosure(slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
+                if (this.nodeName==slaveLabel) {
+                    pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
+                    for (def pyver in pyVers) {
+                        String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
+                        builders[stageLabel] = getTestClosure(slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
+                    }
                 }
             }
             script.parallel(builders)
@@ -120,10 +128,12 @@ class TestRunner {
         for(revisionsEnabled in [true, false]) {
             Map<String, Closure> builders = [:]
             for (slaveLabel in ["Linux", "Macos", "Windows"]) {
-                def pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
-                for (def pyver in pyVers) {
-                    String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
-                    builders[stageLabel] = getTestClosure(slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
+                if (this.nodeName==slaveLabel) {
+                    def pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
+                    for (def pyver in pyVers) {
+                        String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
+                        builders[stageLabel] = getTestClosure(slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
+                    }
                 }
             }
             script.parallel(builders)

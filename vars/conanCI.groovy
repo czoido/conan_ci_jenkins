@@ -13,11 +13,11 @@ if(causeClass == "jenkins.branch.BranchIndexingCause"){
 }
 
 
-def runBuild(script, String testModule = "\"conans/test\"" ) {
+def runBuild(script, String testModule = "\"conans/test\"", String nodeName = "Windows") {
     script.get_jenkins_instance = {
         return Jenkins.instance
     }
 
-    new TestRunner(script, testModule).run()
+    new TestRunner(script, testModule, nodeName).run()
 }
 
