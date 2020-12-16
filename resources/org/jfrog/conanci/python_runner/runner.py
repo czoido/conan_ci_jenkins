@@ -36,6 +36,11 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     pyenv = pylocations[pyver]
     source_cmd = "." if platform.system() != "Windows" else ""
 
+    multiprocess = "-n=%s" % num_cores
+
+    if num_cores <= 1:
+        multiprocess = ""
+
     pip_installs = "pip install -r conans/requirements.txt && " \
                    "pip install -r conans/requirements_dev.txt && " \
                    "pip install -r conans/requirements_server.txt && "
@@ -49,13 +54,15 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "{pip_installs} " \
               "python setup.py install && " \
               "conan --version && conan --help && " \
-              "pytest {module_path} {tags_str} ".format(**{"module_path": module_path,
-                                                           "pyenv": pyenv,
-                                                           "tags_str": tags_str,
-                                                           "venv_dest": venv_dest,
-                                                           "venv_exe": venv_exe,
-                                                           "source_cmd": source_cmd,
-                                                           "pip_installs": pip_installs})
+              "pytest {module_path} {tags_str} " \
+              "{multiprocess} ".format(**{"module_path": module_path,
+                                          "pyenv": pyenv,
+                                          "tags_str": tags_str,
+                                          "venv_dest": venv_dest,
+                                          "venv_exe": venv_exe,
+                                          "source_cmd": source_cmd,
+                                          "multiprocess": multiprocess,
+                                          "pip_installs": pip_installs})
 
     env = get_environ(tmp_folder)
     env["PYTHONPATH"] = source_folder
