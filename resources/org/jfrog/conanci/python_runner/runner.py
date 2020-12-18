@@ -48,37 +48,21 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     if platform.system() == "Darwin" and os.path.exists("conans/requirements_osx.txt"):
         pip_installs += "pip install -r conans/requirements_osx.txt && "
 
-    collect_tests = "echo nosetests_collect_{plat} && nosetests conans.test --collect-only -v && echo pytest_collect_{plat} && pytest --collect-only".format(plat=platform.system())
     #  --nocapture
     command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
               "{source_cmd} \"{venv_exe}\" && " \
               "{pip_installs} " \
               "python setup.py install && " \
               "conan --version && conan --help && " \
-              "{collect_tests} ".format(**{"module_path": module_path,
-                                           "pyenv": pyenv,
-                                           "tags_str": tags_str,
-                                           "venv_dest": venv_dest,
-                                           "venv_exe": venv_exe,
-                                           "source_cmd": source_cmd,
-                                           "multiprocess": multiprocess,
-                                           "pip_installs": pip_installs,
-                                           "collect_tests": collect_tests})
-    #  --nocapture
-    # command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
-    #           "{source_cmd} \"{venv_exe}\" && " \
-    #           "{pip_installs} " \
-    #           "python setup.py install && " \
-    #           "conan --version && conan --help && " \
-    #           "pytest {module_path} {tags_str} " \
-    #           "{multiprocess} ".format(**{"module_path": module_path,
-    #                                       "pyenv": pyenv,
-    #                                       "tags_str": tags_str,
-    #                                       "venv_dest": venv_dest,
-    #                                       "venv_exe": venv_exe,
-    #                                       "source_cmd": source_cmd,
-    #                                       "multiprocess": multiprocess,
-    #                                       "pip_installs": pip_installs})
+              "pytest {module_path} {tags_str} " \
+              "{multiprocess} ".format(**{"module_path": module_path,
+                                          "pyenv": pyenv,
+                                          "tags_str": tags_str,
+                                          "venv_dest": venv_dest,
+                                          "venv_exe": venv_exe,
+                                          "source_cmd": source_cmd,
+                                          "multiprocess": multiprocess,
+                                          "pip_installs": pip_installs})
 
     env = get_environ(tmp_folder)
     env["PYTHONPATH"] = source_folder
