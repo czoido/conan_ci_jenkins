@@ -47,6 +47,8 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
 
     if platform.system() == "Darwin" and os.path.exists("conans/requirements_osx.txt"):
         pip_installs += "pip install -r conans/requirements_osx.txt && "
+    
+    report = "" if platform.system() == "Windows" else "--junitxml=pytest_report.xml && cat pytest_report.xml"
 
     #  --nocapture
     command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
@@ -55,14 +57,16 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "python setup.py install && " \
               "conan --version && conan --help && " \
               "pytest {module_path} {tags_str} " \
-              "{multiprocess} ".format(**{"module_path": module_path,
+              "{multiprocess} " \
+              "{report} ".format(**{"module_path": module_path,
                                           "pyenv": pyenv,
                                           "tags_str": tags_str,
                                           "venv_dest": venv_dest,
                                           "venv_exe": venv_exe,
                                           "source_cmd": source_cmd,
                                           "multiprocess": multiprocess,
-                                          "pip_installs": pip_installs})
+                                          "pip_installs": pip_installs,
+                                          "report": report})
 
     env = get_environ(tmp_folder)
     env["PYTHONPATH"] = source_folder
