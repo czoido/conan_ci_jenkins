@@ -55,7 +55,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     if platform.system() == "Windows" and pyver == "py38":
         traverse_namespace = "--traverse-namespace"
 
-    #  --nocapture
+    #  --nocapture #--cover-tests --cover-xml --cover-erase " \
     command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
               "{source_cmd} \"{venv_exe}\" && " \
               "{pip_installs} " \
@@ -64,8 +64,8 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "nosetests {module_path} {tags_str} --verbosity={verbosity} " \
               "{multiprocess} " \
               "{debug_traces} " \
-              "{traverse_namespace} --with-coverage --cover-tests --cover-xml --cover-erase " \
-              "--with-xunit --xunit-file=nosereport_{system}_{pyver}_{rev_enabled}.xml".format(**{"module_path": module_path,
+              "{traverse_namespace} --with-coverage " \
+              "--with-xunit --xunit-file=nose.xml".format(**{"module_path": module_path,
                                        "pyenv": pyenv,
                                        "tags_str": tags_str,
                                        "venv_dest": venv_dest,
