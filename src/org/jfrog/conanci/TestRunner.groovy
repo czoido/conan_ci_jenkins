@@ -209,7 +209,7 @@ class TestRunner {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}")
-                                script.sh(script: "cp ${sourcedir}/*.xml ${workdir}/")
+                                script.sh(script: "cp ${sourcedir}/nose.xml ${workdir}/")
                                 script.sh(script: "ls")
                                 script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
