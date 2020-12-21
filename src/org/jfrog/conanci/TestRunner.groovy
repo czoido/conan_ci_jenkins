@@ -195,7 +195,9 @@ class TestRunner {
 
                             script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
                                 script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
-                                script.archiveArtifacts artifacts: "${sourcedir}/nose.xml"
+                                script.sh(script: "copy ${sourcedir}/*.xml ${workdir}")
+                                script.sh(script: "ls")
+                                script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
@@ -207,7 +209,9 @@ class TestRunner {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}")
-                                script.archiveArtifacts artifacts: "${sourcedir}/nose.xml"
+                                script.sh(script: "cp ${sourcedir}/*.xml ${workdir}")
+                                script.sh(script: "ls")
+                                script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
@@ -224,9 +228,9 @@ class TestRunner {
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
                                 script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
-                                script.sh(script: "ls ${sourcedir}")
+                                script.sh(script: "cp ${sourcedir}/*.xml ${workdir}")
                                 script.sh(script: "ls")
-                                script.archiveArtifacts artifacts: "${sourcedir}/nose.xml"
+                                script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
