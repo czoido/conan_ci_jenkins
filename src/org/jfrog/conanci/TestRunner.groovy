@@ -17,7 +17,7 @@ class TestRunner {
     void run(){
         cancelPreviousCommits()
         testLevelConfig.init() // This will read the tags from the PR if this is a PR
-        runRESTTests()
+        //runRESTTests()
         script.echo("Branch: ${script.env.BRANCH_NAME}")
         if(script.env.JOB_NAME == "ConanNightly" || script.env.BRANCH_NAME =~ /(^release.*)|(^master)/) {
             runReleaseTests()
@@ -83,7 +83,8 @@ class TestRunner {
 
             // Seconds (revisions or not) for Mac and windows
             builders = [:]
-            for (def slaveLabel in ["Macos", "Windows"]) {
+            //for (def slaveLabel in ["Macos", "Windows"]) {
+            for (def slaveLabel in ["Windows"]) {
                 pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                 for (def pyver in pyVers) {
                     String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
@@ -93,7 +94,7 @@ class TestRunner {
             script.parallel(builders)
         }
         if(testLevelConfig.shouldPublishTestPypi()){
-            publishTestPypi()
+            //publishTestPypi()
         }
     }
 
