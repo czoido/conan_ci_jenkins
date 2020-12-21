@@ -228,7 +228,7 @@ class TestRunner {
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
                                 script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
-                                script.sh(script: "su - conan -c \"cp ${sourcedir}/*.xml \$(pwd)\"")
+                                script.sh(script: "cp ${sourcedir}/*.xml \$(pwd)")
                                 script.sh(script: "ls")
                                 script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
