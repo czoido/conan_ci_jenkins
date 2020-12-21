@@ -41,8 +41,8 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     multiprocess = ("--processes=%s --process-timeout=1000 "
                     "--process-restartworker" % num_cores) if platform.system() != "Darwin" else ""
 
-    if num_cores <= 1:
-        multiprocess = ""
+    #if num_cores <= 1:
+    multiprocess = ""
 
     pip_installs = "pip install -r conans/requirements.txt && " \
                    "pip install -r conans/requirements_dev.txt && " \
