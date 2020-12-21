@@ -195,6 +195,8 @@ class TestRunner {
 
                             script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
                                 script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
+                                archiveArtifacts artifacts: '${sourcedir}/nosereport*'
+                                echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
