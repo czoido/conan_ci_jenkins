@@ -46,7 +46,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
 
     pip_installs = "pip install -r conans/requirements.txt && " \
                    "pip install -r conans/requirements_dev.txt && " \
-                   "pip install -r conans/requirements_server.txt && pip install coverage && "
+                   "pip install -r conans/requirements_server.txt && "
 
     if platform.system() == "Darwin" and os.path.exists("conans/requirements_osx.txt"):
         pip_installs += "pip install -r conans/requirements_osx.txt && "
@@ -55,7 +55,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     if platform.system() == "Windows" and pyver == "py38":
         traverse_namespace = "--traverse-namespace"
 
-    #  --nocapture #--cover-tests --cover-xml --cover-erase " \
+    #  --nocapture #--cover-tests --cover-xml --cover-erase --with-coverage " \
     command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
               "{source_cmd} \"{venv_exe}\" && " \
               "{pip_installs} " \
@@ -64,7 +64,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "nosetests {module_path} {tags_str} --verbosity={verbosity} " \
               "{multiprocess} " \
               "{debug_traces} " \
-              "{traverse_namespace} --with-coverage " \
+              "{traverse_namespace} " \
               "--with-xunit --xunit-file=nose_{system}_{pyver}_{rev_enabled}.xml".format(**{"module_path": module_path,
                                        "pyenv": pyenv,
                                        "tags_str": tags_str,
