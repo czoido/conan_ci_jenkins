@@ -235,7 +235,9 @@ class TestRunner {
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
                                 script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${this.testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
-                            }
+                                script.sh(script: "cp ${sourcedir}/*.xml \$(pwd)")
+                                script.sh(script: "ls")
+                                script.archiveArtifacts artifacts: "*.xml"                            }
                         }
                         finally {
                             script.sh(script: "rm -rf ${sourcedir}")

@@ -48,7 +48,9 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
     if platform.system() == "Darwin" and os.path.exists("conans/requirements_osx.txt"):
         pip_installs += "pip install -r conans/requirements_osx.txt && "
     
-    report = "" if platform.system() == "Windows" else "--junitxml=pytest_report.xml && cat pytest_report.xml"
+    report = "--junitxml=pytest_{}_{}_{}.xml".format(platform.system().lower(),
+                                                     pyver.lower(),
+                                                     "rev" if flavor else "norev")
 
     #  --nocapture
     command = "virtualenv --python \"{pyenv}\" \"{venv_dest}\" && " \
