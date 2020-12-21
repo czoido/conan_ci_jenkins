@@ -65,7 +65,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "{multiprocess} " \
               "{debug_traces} " \
               "{traverse_namespace} --with-coverage " \
-              "--with-xunit --xunit-file=nose.xml".format(**{"module_path": module_path,
+              "--with-xunit --xunit-file=nose_{system}_{pyver}_{rev_enabled}.xml".format(**{"module_path": module_path,
                                        "pyenv": pyenv,
                                        "tags_str": tags_str,
                                        "venv_dest": venv_dest,
@@ -76,8 +76,8 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
                                        "traverse_namespace": traverse_namespace,
                                        "multiprocess": multiprocess,
                                        "pip_installs": pip_installs,
-                                       "system": platform.system(),
-                                       "pyver": pyver,
+                                       "system": platform.system().lower(),
+                                       "pyver": pyver.lower(),
                                        "rev_enabled": "rev" if flavor else "norev"})
 
     env = get_environ(tmp_folder)
