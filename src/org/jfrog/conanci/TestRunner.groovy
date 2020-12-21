@@ -231,7 +231,7 @@ class TestRunner {
                                 script.sh(script: "cp ${sourcedir}/*.xml \$(pwd)")
                                 script.sh(script: "ls")
                                 script.archiveArtifacts artifacts: "*.xml"
-                                script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
+                                //script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
