@@ -195,8 +195,8 @@ class TestRunner {
 
                             script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
                                 script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
-                                script.sh(script: "copy ${sourcedir}/*.xml ${workdir}/")
-                                script.sh(script: "ls")
+                                script.bat(script: "copy ${sourcedir}/*.xml ${workdir}/")
+                                script.bat(script: "dir")
                                 script.archiveArtifacts artifacts: "*.xml"
                                 script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
