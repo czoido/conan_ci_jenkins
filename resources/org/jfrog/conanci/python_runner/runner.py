@@ -78,7 +78,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
                                        "pip_installs": pip_installs,
                                        "system": platform.system(),
                                        "pyver": pyver,
-                                       "flavor": flavor})
+                                       "revisions": "rev" if flavor else "norev"})
 
     env = get_environ(tmp_folder)
     env["PYTHONPATH"] = source_folder
