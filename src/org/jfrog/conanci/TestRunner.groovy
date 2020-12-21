@@ -17,7 +17,7 @@ class TestRunner {
     void run(){
         cancelPreviousCommits()
         testLevelConfig.init() // This will read the tags from the PR if this is a PR
-        //runRESTTests()
+        runRESTTests()
         script.echo("Branch: ${script.env.BRANCH_NAME}")
         if(script.env.JOB_NAME == "ConanNightly" || script.env.BRANCH_NAME =~ /(^release.*)|(^master)/) {
             runReleaseTests()
@@ -207,6 +207,8 @@ class TestRunner {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}")
+                                archiveArtifacts artifacts: '${sourcedir}/nosereport*'
+                                echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
@@ -222,6 +224,8 @@ class TestRunner {
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
                                 script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
+                                archiveArtifacts artifacts: '${sourcedir}/nosereport*'
+                                echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
