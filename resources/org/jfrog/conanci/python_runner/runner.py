@@ -64,7 +64,7 @@ def run_tests(module_path, pyver, source_folder, tmp_folder, flavor, excluded_ta
               "nosetests {module_path} {tags_str} --verbosity={verbosity} " \
               "{multiprocess} " \
               "{debug_traces} " \
-              "{traverse_namespace} " \
+              "{traverse_namespace} --with-coverage " \
               "--with-xunit ".format(**{"module_path": module_path,
                                        "pyenv": pyenv,
                                        "tags_str": tags_str,
