@@ -74,17 +74,17 @@ class TestRunner {
         for(revisionsEnabled in testLevelConfig.getEffectiveRevisionsConfigurations()) {
             // First (revisions or not) for linux
             Map<String, Closure> builders = [:]
-            List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
-            for (def pyver in pyVers) {
-                String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
-                builders[stageLabel] = getTestClosure(testModule, "Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
-            }
-            script.parallel(builders)
+            // List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
+            // for (def pyver in pyVers) {
+            //     String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
+            //     builders[stageLabel] = getTestClosure(testModule, "Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
+            // }
+            // script.parallel(builders)
 
             // Seconds (revisions or not) for Mac and windows
             builders = [:]
-            //for (def slaveLabel in ["Macos", "Windows"]) {
-            for (def slaveLabel in ["Windows"]) {
+            for (def slaveLabel in ["Macos", "Windows"]) {
+            //for (def slaveLabel in ["Windows"]) {
                 pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                 for (def pyver in pyVers) {
                     String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
@@ -192,13 +192,12 @@ class TestRunner {
 
                     if (slaveLabel == "Windows") {
                         try {
-
                             script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
                                 script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
-                                script.bat(script: "copy \"${sourcedir}/*.xml\" \"${workdir}\"")
+                                def backward = sourcedir.replace("/","\\")                                
+                                script.bat(script: "copy ${backward}\\*.xml .")
                                 script.bat(script: "dir")
                                 script.archiveArtifacts artifacts: "*.xml"
-                                script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
@@ -209,10 +208,9 @@ class TestRunner {
                         try {
                             script.withEnv(['PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin']) {
                                 script.sh(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} ${workdir} ${numcores} ${flavor_cmd} ${eTags}")
-                                script.sh(script: "cp ${sourcedir}/nose.xml ${workdir}/")
+                                script.sh(script: "cp ${sourcedir}/*.xml \$(pwd)")
                                 script.sh(script: "ls")
                                 script.archiveArtifacts artifacts: "*.xml"
-                                script.echo "Inspect generated webpage at ${BUILD_URL}artifact/"
                             }
                         }
                         finally {
