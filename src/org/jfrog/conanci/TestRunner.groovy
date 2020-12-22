@@ -85,7 +85,7 @@ class TestRunner {
             builders = [:]
             for (def slaveLabel in ["Macos", "Windows"]) {
             //for (def slaveLabel in ["Windows"]) {
-                pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
+                List<String> pyVers = pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                 for (def pyver in pyVers) {
                     String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
                     builders[stageLabel] = getTestClosure(testModule, slaveLabel, stageLabel, revisionsEnabled, pyver, excludedTags, [])
