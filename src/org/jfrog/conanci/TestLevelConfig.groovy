@@ -35,8 +35,8 @@ class TestLevelConfig {
             script.stage("Check PR tags"){
                 script.withCredentials([script.usernamePassword(credentialsId: 'conanci-gh-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
                     script.checkout(script.scm)
-                    script.sh("docker pull conanio/conantests")
-                    script.docker.image('conanio/conantests').inside("-e GH_TOKEN=${script.GH_TOKEN}"){
+                    script.sh("docker pull conanio/ci-conantests")
+                    script.docker.image('conanio/ci-conantests').inside("-e GH_TOKEN=${script.GH_TOKEN}"){
                         def pr_tags = script.libraryResource('org/jfrog/conanci/python_runner/pr_tags.py')
                         script.writeFile file: "pr_tags.py", text: pr_tags
                         script.sh(script: "python pr_tags.py out.json ${script.env.BRANCH_NAME}")

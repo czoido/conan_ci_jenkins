@@ -211,8 +211,8 @@ class TestRunner {
                     }
                     else if (slaveLabel == "Linux"){
                         try {
-                            script.sh("docker pull conanio/conantests")
-                            script.docker.image('conanio/conantests').inside() {
+                            script.sh("docker pull conanio/ci-conantests")
+                            script.docker.image('conanio/ci-conantests').inside() {
                                 script.sh(script: "mkdir -p ${sourcedir}")
                                 script.sh(script: "cp -R ./ ${sourcedir}")
                                 script.sh(script: "chown -R conan ${sourcedir}")
