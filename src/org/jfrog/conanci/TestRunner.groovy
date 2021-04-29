@@ -18,7 +18,7 @@ class TestRunner {
     void run(){
         cancelPreviousCommits()
         testLevelConfig.init() // This will read the tags from the PR if this is a PR
-        runRESTTests()
+        //runRESTTests()
         script.echo("Branch: ${script.env.BRANCH_NAME}")
         if(script.env.JOB_NAME == "ConanNightly" || script.env.BRANCH_NAME =~ /(^release.*)|(^master)/) {
             runReleaseTests()
@@ -74,15 +74,15 @@ class TestRunner {
             // First (revisions or not) for linux
             Map<String, Closure> builders = [:]
             List<String> pyVers = testLevelConfig.getEffectivePyvers("Linux")
-            for (def pyver in pyVers) {
-                String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
-                builders[stageLabel] = getTestClosure("Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
-            }
-            script.parallel(builders)
+            // for (def pyver in pyVers) {
+            //     String stageLabel = getStageLabel("Linux", revisionsEnabled, pyver, excludedTags)
+            //     builders[stageLabel] = getTestClosure("Linux", stageLabel, revisionsEnabled, pyver, excludedTags, [])
+            // }
+            // script.parallel(builders)
 
             // Seconds (revisions or not) for Mac and windows
             builders = [:]
-            for (def slaveLabel in ["Macos", "Windows"]) {
+            for (def slaveLabel in ["Windows"]) {
                 pyVers = testLevelConfig.getEffectivePyvers(slaveLabel)
                 for (def pyver in pyVers) {
                     String stageLabel = getStageLabel(slaveLabel, revisionsEnabled, pyver, excludedTags)
@@ -189,7 +189,7 @@ class TestRunner {
 
                     if (slaveLabel == "Windows") {
                         try {
-                            script.withEnv(["CONAN_TEST_FOLDER=${workdir}", "_MSPDBSRV_ENDPOINT_=${script.env.BUILD_TAG}-${pyver}"]) {
+                            script.withEnv(["CONAN_TEST_FOLDER=${workdir}", "_MSPDBSRV_ENDPOINT_=${script.env.BUILD_TAG}"]) {
                                 script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
                             }
                         }
