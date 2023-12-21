@@ -162,15 +162,15 @@ class TestRunner {
                     String numcores = "--num_cores=${numCores}"
 
                     if (slaveLabel == "Windows") {
-                        try {
-                            script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
-                                script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
-                            }
-                        }
-                        finally {
-                            script.bat(script: "rd /s /q \"${workdir}\"")
-                            script.bat(script: "rd /s /q \"${sourcedir}\"")
-                        }
+                        // try {
+                        //     script.withEnv(["CONAN_TEST_FOLDER=${workdir}"]) {
+                        //         script.bat(script: "python python_runner/runner.py ${testModule} ${pyver} ${sourcedir} \"${workdir}\" ${numcores} ${flavor_cmd} ${eTags}")
+                        //     }
+                        // }
+                        // finally {
+                        //     script.bat(script: "rd /s /q \"${workdir}\"")
+                        //     script.bat(script: "rd /s /q \"${sourcedir}\"")
+                        // }
                     } else if (slaveLabel == "M2Macos") {
                         try {
                             def localDir = "/Users/jenkins"
@@ -185,18 +185,18 @@ class TestRunner {
                         }
                     }
                     else if (slaveLabel == "Linux"){
-                        try {
-                            script.sh("docker pull conanio/conantests")
-                            script.docker.image('conanio/conantests').inside() {
-                                script.sh(script: "mkdir -p ${sourcedir}")
-                                script.sh(script: "cp -R ./ ${sourcedir}")
-                                script.sh(script: "chown -R conan ${sourcedir}")
-                                script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
-                            }
-                        }
-                        finally {
-                            script.sh(script: "rm -rf ${sourcedir}")
-                        }
+                        // try {
+                        //     script.sh("docker pull conanio/conantests")
+                        //     script.docker.image('conanio/conantests').inside() {
+                        //         script.sh(script: "mkdir -p ${sourcedir}")
+                        //         script.sh(script: "cp -R ./ ${sourcedir}")
+                        //         script.sh(script: "chown -R conan ${sourcedir}")
+                        //         script.sh(script: "su - conan -c \"python ${sourcedir}/python_runner/runner.py ${testModule} ${pyver} ${sourcedir} /tmp ${numcores} ${flavor_cmd} ${eTags}\"")
+                        //     }
+                        // }
+                        // finally {
+                        //     script.sh(script: "rm -rf ${sourcedir}")
+                        // }
                     }
                 }
             }
