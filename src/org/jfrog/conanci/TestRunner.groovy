@@ -5,7 +5,7 @@ class TestRunner {
     private static final String winTmpBase = "C:/J/t/"
     private static final String restTmpBase = "/tmp/"
     private static final String numCores = "4"
-    private static final String testModule = "\"conans/test/integration\""
+    private static final String testModule = "\"conans/test/integration/build_helpers\""
     private script;
     private TestLevelConfig testLevelConfig
 
