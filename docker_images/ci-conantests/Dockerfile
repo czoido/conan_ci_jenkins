@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 LABEL maintainer="Conan.io <info@conan.io>"
 
@@ -12,7 +12,7 @@ RUN apt-get -qq update \
        # pyenv requires
        make build-essential libssl-dev zlib1g-dev libbz2-dev \
        libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-       xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+       xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
 
 RUN useradd -ms /bin/bash conan
 USER conan
@@ -40,9 +40,13 @@ RUN apt-get -qq update \
     software-properties-common
 
 RUN curl -kfsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
-    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" \
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable" \
+    && mkdir -p -m 755 /etc/apt/keyrings \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/github-cli.gpg > /dev/null \
+    && chmod a+r /etc/apt/keyrings/github-cli.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/github-cli.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && apt-get update \
-    && apt-get install -y docker-ce docker-ce-cli containerd.io \
+    && apt-get install -y docker-ce docker-ce-cli containerd.io gh \
     && rm -rf /var/lib/apt/lists/* \
     && usermod -aG docker conan \
     && systemctl enable docker \
